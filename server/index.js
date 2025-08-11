@@ -6,10 +6,11 @@ const PORT = 4000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+    
 
 app.get("/api", (req, res) => {
     res.json({
-        message: "Hello World",
+        message: users,
     });
 });
 
@@ -66,9 +67,23 @@ app.post("/api/login", (req, res) =>{
     });
 });
 
+const threadList = [];
+
 app.post("/api/create/thread", async(req, res) => {
     const {thread, useID} = req.body;
     const threadId = generateID();
 
-    console.log({thread, userId, threadId});
+    threadList.unshift({
+        id: threadId,
+        title: thread,
+        userId,
+        replies: [],
+        likes: [],
+    });
+
+    res.json({
+        message: "Thread criada com sucesso!",
+        threads: threadList,
+    });
+
 });

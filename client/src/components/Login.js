@@ -9,6 +9,7 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log({email, password});
+        loginUser();
         setEmail("");
         setPassword("");
 
@@ -31,7 +32,7 @@ const Login = () => {
                 alert(data.error_message);
             } else {
                 alert(data.message);
-                navigate("/dashboard");
+                navigate("/home");
                 localStorage.setItem("_id", data.id);
             }
         })

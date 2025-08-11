@@ -11,14 +11,15 @@ const Register = () => {
     const signup = () => {
         fetch("http://localhost:4000/api/register", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 email,
                 password,
                 username,
             }),
-            headers: {
-                "Content-Type": "applications/json",
-            },
+            
         })
             .then((res) => res.json())
             .then((data) => {
@@ -31,6 +32,7 @@ const Register = () => {
                 
             })
             .catch((err) => console.error(err));
+        
     };
 
     const handleSubmit = (e) => {
