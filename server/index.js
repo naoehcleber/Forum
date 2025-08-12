@@ -19,7 +19,7 @@ app.listen(PORT, () => {
 });
 
 //criacao de novos usuarios
-//TODO: mudar pra hashing e alocação dinamica dps
+//TODO: mudar pra banco de dados
 const users =[];
 
 const generateID = () => Math.random().toString(36).substring(2,10);
@@ -67,6 +67,7 @@ app.post("/api/login", (req, res) =>{
     });
 });
 
+//TODO: mudar pra banco de dados
 const threadList = [];
 
 app.post("/api/create/thread", async(req, res) => {
@@ -86,4 +87,28 @@ app.post("/api/create/thread", async(req, res) => {
         threads: threadList,
     });
 
+});
+
+app.get("api/all/threads", (req, res) => {
+    res.json({
+        threads: threadList,
+    });
+});
+
+app.post("/api/thread/like", (req, res) => {
+    const { threadId, userId } = req.body;
+    const result = threadList.filter((thread) => thread.id === threadId);
+    const threadLikes = result[0].likes;
+    const authenticateReaction = threadLikes.filter((user) => user === userId);
+
+    if(authenticateReaction.length === 0){
+        threadLikes.push(userId);
+        return res.json({
+            message: "Post reagido!",
+        });
+    }
+
+    res.json({
+        error_message: "Só pode reagir uma vez fiote!",
+    });
 });

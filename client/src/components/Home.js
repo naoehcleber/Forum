@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Nav from "./Nav";
+import Comments from "../utils/Comments";
+import Likes from "../utils/Likes";
 
 const Home = () => {
     const navigate = useNavigate();
 
     const [thread, setThread] = useState("");
 
+    const [threadList, setThreadList] = useState([]);
+
     useEffect(() => {
         const checkUser = () => {
             if(!localStorage.getItem("_id")){
                 navigate("/");
             } else{
-                console.log("Autenticado");
+                fetch("http://localhost:4000/api/all/threads")
+                .then((res) => res.json())
+                .then((data) => setThreadList(data.threads))
+                .catch((err) => console.error(err));
             };
         };
         checkUser();
@@ -32,7 +39,8 @@ const Home = () => {
         })
         .then((res) => res.json)
         .then((data) => {
-            console.log(data);
+            alert(data.messaage);
+            setThreadList(data.threads);
         })
         .catch((err) => console.error(err));
     };
@@ -56,6 +64,17 @@ const Home = () => {
                     </div>
                     <button className='homeBtn'> Criar Thread</button>
                 </form>
+                <div className='thread_container'>
+                    {threadList.map((thread) => (
+                        <div className='thread_item' key={thread.id}>
+                            <p>{thread.title}</p>
+                            <div className='react_container'> 
+                                <Likes numberOfLikes={thread.likes.lenght} />
+                                <Comments numberOfComments={thread.replies.lenght} threadId={thread.id} title={thread.title}/>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </main>
         </>
     )
