@@ -1,0 +1,28 @@
+version: '3'
+services:
+  backend:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports: 
+    - "4000:4000"
+    container_name: backend_app
+    depends_on:
+      - couchdb
+    environment:
+      - COUCHDB_URL=http://couchdb:5984
+      - COUCHDB_USERNAME=admin
+      - COUCHDB_PASSWORD=password
+  couchdb:
+    image: couchdb:3.5.0
+    container_name: database_app
+    ports:
+      - "5984:5984"
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+  
+volumes:
+  couchdb_data:

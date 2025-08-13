@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const nano = require('nano')('http://localhost:5984');
 const app = express();
 const PORT = 4000;
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -20,7 +22,20 @@ app.listen(PORT, () => {
 
 //criacao de novos usuarios
 //TODO: mudar pra banco de dados
-const users =[];
+//const users =[];
+nano.db.list(function(err, body){
+    if(!err){
+        if(body.includes("users") && body.includes("threadList")){
+            const users = nano.use("users");
+            const threadList = nano.use("threadList");
+        } else{
+            nano.db.create("users");
+            nano.db.create("threadList");
+        }
+    }else{
+        console.log("Erro ao acessar banco de dados: ", err);
+    }
+});
 
 const generateID = () => Math.random().toString(36).substring(2,10);
 
